@@ -23,9 +23,7 @@ import com.example.karaokeapp.ui.theme.PinkDarkerMic
 
 
 @Composable
-fun HomeScreen( onGoMusics : () -> Unit, onGoAbout : () -> Unit
-    //navController: NavController,
-) {
+fun HomeScreen( onGoMusics : () -> Unit, onGoAbout : () -> Unit) {
 
     Column(
         modifier = Modifier.fillMaxSize(),

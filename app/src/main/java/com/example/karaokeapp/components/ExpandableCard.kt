@@ -38,7 +38,7 @@ fun ColumnItem(song: Song) {
             .height(50.dp)
             .background(Color.White)
             .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
-    verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
 
     ) {
@@ -143,7 +143,7 @@ fun ExpandableCard(dataList: Map<String, List<Song>>) {
                 }
             }
             item {
-                Spacer(modifier = Modifier.padding(vertical = 8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
