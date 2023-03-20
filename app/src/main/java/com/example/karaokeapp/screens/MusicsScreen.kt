@@ -16,7 +16,10 @@ import androidx.compose.ui.unit.dp
 import com.example.karaokeapp.ui.theme.WitheMic
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.karaokeapp.components.ExpandableCard
+import com.example.karaokeapp.components.navBarReturnButton
 import com.example.karaokeapp.data.Song
+import com.example.karaokeapp.ui.theme.AppTheme
+import com.example.karaokeapp.ui.theme.Orientation
 
 
 @Composable
@@ -24,34 +27,46 @@ fun MusicsScreen(
     viewModel: MusicsViewModel = viewModel(),
     onGoHome : () -> Unit
 ) {
-
     val songs by produceState<Map<String, List<Song>>>(emptyMap(), viewModel) { value = viewModel.getSongs() }
 
+    if (AppTheme.orientation == Orientation.Portrait){
+        MusicsScreenPortrait(songs = songs, onGoHome)
+    }else{
+        MusicsScreenLandscape(songs = songs, onGoHome)
+    }
+}
+
+@Composable
+fun MusicsScreenPortrait(
+    songs : Map<String, List<Song>>,
+    onGoHome : () -> Unit
+){
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Row(
-            Modifier
-                .background(color = WitheMic)
-                .fillMaxWidth()
-                .height(60.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            IconButton( onClick = onGoHome){
-                Icon(
-                    modifier = Modifier.size(40.dp),
-                    imageVector = Icons.Default.ArrowBack, contentDescription = "return to Home"
-                )
-            }
-        }
-        if (songs.isNotEmpty()) {
-            ExpandableCard(songs)
-        }
 
+        navBarReturnButton(isPortrait = true, onGoHome)
+
+        if(songs.isNotEmpty()){ ExpandableCard(songs, true) }
     }
 }
 
+@Composable
+fun MusicsScreenLandscape(
+    songs : Map<String, List<Song>>,
+    onGoHome : () -> Unit
+){
+    Row(
+        modifier = Modifier.fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        navBarReturnButton(isPortrait = false, onGoHome)
+
+        if(songs.isNotEmpty()){ ExpandableCard(songs, false) }
+    }
+}
 
 
 @Composable

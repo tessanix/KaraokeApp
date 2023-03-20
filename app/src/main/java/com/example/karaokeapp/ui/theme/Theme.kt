@@ -28,6 +28,63 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
+fun KaraokeAppTheme(
+    windowSizeClass: WindowSizeClass,
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) {
+        DarkColorPalette
+    } else {
+        LightColorPalette
+    }
+
+    val orientation = when{
+        windowSizeClass.width.size > windowSizeClass.height.size -> Orientation.Landscape
+        else -> Orientation.Portrait
+    }
+
+    val sizeThatMatters = when(orientation){
+        Orientation.Portrait -> windowSizeClass.width
+        else -> windowSizeClass.height
+    }
+
+    val dimensions = when(sizeThatMatters){
+        is WindowSize.Small -> smallDimensions
+        is WindowSize.Compact -> compactDimensions
+        is WindowSize.Medium -> mediumDimensions
+        else -> largeDimensions
+    }
+
+    val typography = when(sizeThatMatters){
+        is WindowSize.Small -> typographySmall
+        is WindowSize.Compact -> typographyCompact
+        is WindowSize.Medium -> typographyMedium
+        else -> typographyBig
+    }
+
+    ExtendsThemes(dimensions = dimensions, orientation = orientation) {
+        MaterialTheme(
+            colors = colors,
+            typography = typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
+}
+
+object AppTheme{
+    val dimens:Dimensions
+        @Composable
+        get() = LocalAppDimens.current
+
+    val orientation:Orientation
+        @Composable
+        get() = LocalOrientationMode.current
+}
+
+/*
+@Composable
 fun KaraokeAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) {
         DarkColorPalette
@@ -41,4 +98,4 @@ fun KaraokeAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
         shapes = Shapes,
         content = content
     )
-}
+}*/

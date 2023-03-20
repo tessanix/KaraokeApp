@@ -15,18 +15,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.karaokeapp.R
+import com.example.karaokeapp.ui.theme.AppTheme
+import com.example.karaokeapp.ui.theme.Orientation
 
 import com.example.karaokeapp.ui.theme.PinkDarkerMic
 
 
 @Composable
-fun HomeScreen( onGoMusics : () -> Unit, onGoAbout : () -> Unit
-    //navController: NavController,
-) {
-
+fun HomeScreen( onGoMusics : () -> Unit, onGoAbout : () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,50 +40,78 @@ fun HomeScreen( onGoMusics : () -> Unit, onGoAbout : () -> Unit
             fontWeight = FontWeight.ExtraBold,
         )
 
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .size(350.dp)
-                .border(width = 10.dp, shape = CircleShape, color = PinkDarkerMic)
-
-        ) {
-            Image(
-                painter = painterResource(R.drawable.icon_karaoke),
-                contentDescription = null,
-                modifier = Modifier.size(220.dp)
-            )
+        if (AppTheme.orientation == Orientation.Portrait) {
+            HomeScreenPortrait(onGoMusics, onGoAbout)
+        } else {
+            HomeScreenLandscape(onGoMusics, onGoAbout)
         }
-        Button(
-            onClick = onGoMusics,//navController.navigate(route = Screen.Musics.route) },
-            modifier = Modifier
-                .height(70.dp)
-                .width(180.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = PinkDarkerMic,  contentColor = Color.White)
-        ) {
-            Text(
-                text = "Musiques",
-                fontSize = 20.sp,
-            )
-        }
-        Button(
-            onClick =  onGoAbout,//{ navController.navigate(route = Screen.About.route) },
-            modifier = Modifier
-                .height(70.dp)
-                .width(180.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = PinkDarkerMic, contentColor = Color.White)
-        ) {
-            Text(
-                text = "À propos de Rocco",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
-            )
+    }
+}
+@Composable
+fun HomeScreenPortrait(onGoMusics : () -> Unit, onGoAbout : () -> Unit){
+
+    KaraokeRowImage()
+
+    NavButton("Musiques", onGoMusics)
+
+    NavButton("À propos de Rocco", onGoAbout)
+}
+
+@Composable
+fun HomeScreenLandscape(onGoMusics : () -> Unit, onGoAbout : () -> Unit){
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        KaraokeRowImage(310.dp, 190.dp)
+
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceAround
+        ){
+            NavButton("Musiques", onGoMusics)
+
+            NavButton("À propos de Rocco", onGoAbout)
         }
 
     }
 }
 
+@Composable
+fun KaraokeRowImage(circleSize: Dp = 350.dp, imageSize:Dp = 220.dp){
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .size(circleSize)
+            .border(width = 10.dp, shape = CircleShape, color = PinkDarkerMic)
+    ){
+        Image(
+            painter = painterResource(R.drawable.icon_karaoke),
+            contentDescription = null,
+            modifier = Modifier.size(imageSize)
+        )
+    }
+}
+
+@Composable
+fun NavButton(text : String, navFunc: () -> Unit){
+    Button(
+        onClick =  navFunc,
+        modifier = Modifier
+            .height(70.dp)
+            .width(180.dp),
+        colors = ButtonDefaults.buttonColors(backgroundColor = PinkDarkerMic, contentColor = Color.White)
+    ) {
+        Text(
+            text = text,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
 
 @Composable
 @Preview(showBackground = true)
