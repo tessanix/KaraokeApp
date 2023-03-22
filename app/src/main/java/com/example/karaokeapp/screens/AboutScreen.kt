@@ -39,7 +39,6 @@ fun AboutScreenPortrait(onGoHome : () -> Unit){
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
-        //verticalArrangement = Arrangement.SpaceAround,
     ) {
         Column {
 
@@ -66,15 +65,13 @@ fun AboutScreenPortrait(onGoHome : () -> Unit){
 
             }
         }
-        //Spacer(modifier = Modifier.height(50.dp))
 
         Text(
             text = "Frédy GOMBAUD-SAINTONGE dit Rocco",
             fontSize = 30.sp,
             textAlign = TextAlign.Center
         )
-        //Spacer(modifier = Modifier.height(80.dp))
-        Row() {
+        Row{
             Icon(
                 modifier = Modifier
                     .size(50.dp)
@@ -87,7 +84,6 @@ fun AboutScreenPortrait(onGoHome : () -> Unit){
                 textAlign = TextAlign.Center
             )
         }
-        //Spacer(modifier = Modifier.height(150.dp))
 
         Text(
             text = "Anniversaires, Soirées, Manifestations, etc.",
@@ -105,7 +101,6 @@ fun AboutScreenLandScape(onGoHome : () -> Unit) {
         modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
-        //verticalArrangement = Arrangement.SpaceAround,
     ) {
 
         navBarReturnButton(isPortrait = false, onGoHome)

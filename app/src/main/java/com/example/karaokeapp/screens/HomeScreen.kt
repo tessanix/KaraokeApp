@@ -14,19 +14,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.karaokeapp.R
 import com.example.karaokeapp.ui.theme.AppTheme
+import com.example.karaokeapp.ui.theme.MainActivityViewModel
 import com.example.karaokeapp.ui.theme.Orientation
 
 import com.example.karaokeapp.ui.theme.PinkDarkerMic
 
 
 @Composable
-fun HomeScreen( onGoMusics : () -> Unit, onGoAbout : () -> Unit) {
+fun HomeScreen(
+    viewModel: MainActivityViewModel,
+    onGoMusics : () -> Unit,
+    onGoAbout : () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,6 +43,25 @@ fun HomeScreen( onGoMusics : () -> Unit, onGoAbout : () -> Unit) {
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.ExtraBold,
         )
+        Button(
+            onClick = { viewModel.authentificate() },
+        ){
+            Text(
+                text = "login as admin",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Button(
+            onClick = { viewModel.signOut() },
+        ){
+            Text(
+                text = "disconnect",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        }
 
         if (AppTheme.orientation == Orientation.Portrait) {
             HomeScreenPortrait(onGoMusics, onGoAbout)
@@ -111,10 +134,4 @@ fun NavButton(text : String, navFunc: () -> Unit){
             textAlign = TextAlign.Center
         )
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun HomeScreenPreview(){
-    HomeScreen( {}, {})
 }
