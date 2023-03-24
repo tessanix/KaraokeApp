@@ -24,7 +24,7 @@ class MainActivityViewModel(
         //val currentUser = firebaseAuth.currentUser
         //Log.d("User to string ",currentUser.toString())
         //if(currentUser == null) { // User is logged out
-            firebaseAuth.signInWithEmailAndPassword("tessanix51@gmail.com", "Cannelle2555")
+            firebaseAuth.signInWithEmailAndPassword("xxxx@gmail.xxx", "xxxx")
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d("Authentication", "signInWithCustomToken: success")
