@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.karaokeapp.R
-import com.example.karaokeapp.components.navBarReturnButton
+import com.example.karaokeapp.components.NavBarReturnButton
 import com.example.karaokeapp.ui.theme.AppTheme
 import com.example.karaokeapp.ui.theme.Orientation
 
@@ -42,7 +42,7 @@ fun AboutScreenPortrait(onGoHome : () -> Unit){
     ) {
         Column {
 
-            navBarReturnButton(isPortrait = true, onGoHome)
+            NavBarReturnButton(isPortrait = false, listElements = emptyList(), navFunc = onGoHome)
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -103,7 +103,7 @@ fun AboutScreenLandScape(onGoHome : () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        navBarReturnButton(isPortrait = false, onGoHome)
+        NavBarReturnButton(isPortrait = false, listElements = emptyList(), navFunc = onGoHome)
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

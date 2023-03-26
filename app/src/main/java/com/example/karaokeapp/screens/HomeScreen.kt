@@ -2,71 +2,71 @@ package com.example.karaokeapp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.karaokeapp.MainActivityViewModel
 import com.example.karaokeapp.R
+import com.example.karaokeapp.components.LoginFormBox
 import com.example.karaokeapp.ui.theme.AppTheme
-import com.example.karaokeapp.ui.theme.MainActivityViewModel
 import com.example.karaokeapp.ui.theme.Orientation
-
 import com.example.karaokeapp.ui.theme.PinkDarkerMic
 
 
 @Composable
 fun HomeScreen(
-    viewModel: MainActivityViewModel,
-    onGoMusics : () -> Unit,
-    onGoAbout : () -> Unit
+    isAdmin: Boolean?,
+    mainViewModel: MainActivityViewModel,
+    onGoMusics: () -> Unit,
+    onGoAbout: () -> Unit
 ) {
+    var isFormBoxDisplayed by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround,
     ) {
 
-        Text(
-            text = "Rocco Karaoké",
-            fontSize = 50.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.ExtraBold,
-        )
-        Button(
-            onClick = { viewModel.authentificate() },
-        ){
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            AdminRow(isAdmin, { mainViewModel.signOut() }, isFormBoxDisplayed){
+                newDisplay -> isFormBoxDisplayed = !newDisplay
+            }
+
             Text(
-                text = "login as admin",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
+                text = "Rocco Karaoké",
+                fontSize = 50.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraBold,
             )
         }
 
-        Button(
-            onClick = { viewModel.signOut() },
-        ){
-            Text(
-                text = "disconnect",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
-            )
-        }
 
         if (AppTheme.orientation == Orientation.Portrait) {
             HomeScreenPortrait(onGoMusics, onGoAbout)
         } else {
             HomeScreenLandscape(onGoMusics, onGoAbout)
+        }
+    }
+
+    if(isFormBoxDisplayed){
+        LoginFormBox(mainViewModel = mainViewModel){
+            isFormBoxDisplayed = false
         }
     }
 }
@@ -135,3 +135,51 @@ fun NavButton(text : String, navFunc: () -> Unit){
         )
     }
 }
+
+
+@Composable
+fun AdminRow(
+    isAdmin:Boolean?,
+    signOut: () -> Unit,
+    displayForm: Boolean,
+    displayLoginForm: (Boolean) -> Unit,
+){
+    Row(
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+    ) {
+        if (isAdmin == true) {
+            Text(
+                modifier = Modifier.padding(horizontal = 30.dp),
+                text = "Admin Mode activated",
+                fontSize = 19.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.SemiBold,
+            )
+
+            Text(
+
+                modifier = Modifier
+                    .clickable{ signOut() },
+                textAlign = TextAlign.Center,
+                text = "Disconnect",
+            )
+
+        } else {
+            Text(
+                modifier = Modifier.clickable{ displayLoginForm(displayForm) },
+                text = "Login as admin",
+            )
+        }
+    }
+}
+
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview(){
+//    HomeScreen( isAdmin = true, {}, {} , {}, {})
+//}
