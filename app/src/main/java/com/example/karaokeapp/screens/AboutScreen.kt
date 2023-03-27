@@ -42,7 +42,7 @@ fun AboutScreenPortrait(onGoHome : () -> Unit){
     ) {
         Column {
 
-            NavBarReturnButton(isPortrait = false, listElements = emptyList(), navFunc = onGoHome)
+            NavBarReturnButton(isPortrait = true, listElements = emptyList(), navFunc = onGoHome)
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,

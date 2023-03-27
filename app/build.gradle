@@ -60,11 +60,13 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.5.3"
 
     //lifecycles (coroutines, flows, liveData, ...)
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.compose.runtime:runtime-livedata:1.4.0' // observe live data in composable
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
 
+    // Icons
+    implementation "androidx.compose.material:material-icons-extended:1.4.0"
 
     implementation 'androidx.activity:activity-compose:1.6.1'
 

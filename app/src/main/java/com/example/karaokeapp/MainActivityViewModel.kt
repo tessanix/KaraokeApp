@@ -14,33 +14,35 @@ import kotlinx.coroutines.tasks.await
 class MainActivityViewModel @JvmOverloads constructor(
     application: Application,
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance(),
-    private val database: DatabaseReference = FirebaseDatabase
-        .getInstance().getReferenceFromUrl("https://fir-test-a3869-default-rtdb.firebaseio.com/"),
+    private val databaseRoot: DatabaseReference = FirebaseDatabase
+        .getInstance()
+        .getReferenceFromUrl("https://fir-test-a3869-default-rtdb.firebaseio.com/"),
     private val repository: DataStoreRepository = DataStoreRepository(application)
 ): AndroidViewModel(application) {
 
     // liveData to manage Admin mode
-    var isAdmin = repository.readFromDataStore.asLiveData() //MutableLiveData( readFromDataStore.value ?: false )
-    //val isAdmin = _isAdmin
+    var isAdmin = repository.readFromDataStore.asLiveData()
     private fun saveToDataStore(adminPrivilege: Boolean) = viewModelScope.launch(Dispatchers.IO){
         repository.saveToDataStore(adminPrivilege)
-//        delay(2000L)
     }
 
-    fun authenticate( id: String, password: String ){
-        firebaseAuth.signInWithEmailAndPassword(id, password)//"tessanix51@gmail.com", "Cannelle2")
+    fun authenticate( id: String, password: String, callbackError: (Boolean) -> Unit){
+        firebaseAuth.signInWithEmailAndPassword(id, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     saveToDataStore(adminPrivilege = true)
                     Log.d("Authentication", "signInWithCustomToken: success")
+                    callbackError(false)
                 } else {
                     saveToDataStore(adminPrivilege = false)
                     Log.d("Authentication", "signInWithCustomToken: Failed")
+                    callbackError(true)
                 }
                 Log.d("Authentication", "admin value is ${isAdmin.value}")
 
             }
     }
+
 
     fun signOut(){
         saveToDataStore(adminPrivilege = false)
@@ -48,9 +50,20 @@ class MainActivityViewModel @JvmOverloads constructor(
         Log.d("User disconnected", "admin value is ${isAdmin.value}")
     }
 
+//    suspend fun getUserInfos(): Pair<String, String> {
+//        val resultDatabase = database.child("Users").get().await()
+//        val firstUser = resultDatabase.children.first()
+//
+//        return Pair(
+//            firstUser.child("email").toString(),
+//            firstUser.child("email").toString()
+//        )
+//    }
 
     suspend fun getSongs(): Map<String, List<Song>> {
-        val resultDatabase = database.get().await()
+        //val resultDatabase = database.child("Musics").get().await()
+
+        val resultDatabase = databaseRoot.get().await()
 
         return resultDatabase.children.associate { cat ->
             val songList = cat.children.map { song ->
@@ -61,6 +74,7 @@ class MainActivityViewModel @JvmOverloads constructor(
             }
             cat.key.toString() to songList
         }
+
     }
 
 
@@ -68,14 +82,13 @@ class MainActivityViewModel @JvmOverloads constructor(
         category: String,
         newTitle : String,
         newAuthor: String
-    ) { //= viewModelScope.launch{
-        val database: DatabaseReference = FirebaseDatabase.getInstance().getReference(category)
-
-        val resultDatabase = database.get().await()
+    ) {
+        val databaseCategory = databaseRoot.child(category)
+        val resultDatabase = databaseCategory.get().await()
 
         val numElements = resultDatabase.children.count()
 
-        database.child(numElements.toString()).setValue(
+        databaseCategory.child(numElements.toString()).setValue(
             Song(title = newTitle, author = newAuthor)
         )
     }
