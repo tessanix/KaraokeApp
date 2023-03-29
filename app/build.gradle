@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.karaokeapp'
+    namespace 'com.mizikarocco.karaokeapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.karaokeapp"
+        applicationId "com.mizikarocco.karaokeapp"
         minSdk 24
         targetSdk 33
         versionCode 1
