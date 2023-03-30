@@ -66,9 +66,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:695292199472:android:06e508f72f5092f337e3f5",
+        "mobilesdk_app_id": "1:695292199472:android:3f714506bda5b97937e3f5",
         "android_client_info": {
-          "package_name": "com.example.karaokeapplication"
+          "package_name": "com.mizikarocco.karaokeapp"
         }
       },
       "oauth_client": [
