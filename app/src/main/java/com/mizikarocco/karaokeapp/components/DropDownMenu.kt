@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.toSize
 
 @Composable
 fun DropDownMenu(
+    isError: Boolean,
     choices: List<String>,
     updateTextState: (String) -> Unit
 ){
@@ -53,7 +54,8 @@ fun DropDownMenu(
             label = {Text("Catégorie")},
             trailingIcon = {
                 Icon(icon,"", Modifier.clickable { mExpanded = !mExpanded })
-            }
+            },
+            isError = isError
         )
 
         // Create a drop-down menu with list of cities,

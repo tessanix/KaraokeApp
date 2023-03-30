@@ -37,6 +37,17 @@ fun LoginFormBox(
     var isError by remember { mutableStateOf(false)}
 
 
+    fun authenticateAndHideBox(){
+        if(id != "" && password != "") {
+            mainViewModel.authenticate(id, password) {
+                isError = it
+                if (!it) hideFormBox()
+            }
+        }else{
+            isError = true
+        }
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
@@ -103,25 +114,14 @@ fun LoginFormBox(
                     imeAction = ImeAction.Done,
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = {
-                        mainViewModel.authenticate(id, password){
-                            isError = it
-                            if(!it) hideFormBox()
-                        }
-                    }
+                    onDone = { authenticateAndHideBox() }
                 ),
                 isError = isError
             )
 
-
             Button(
                 modifier = Modifier.padding(vertical = 10.dp),
-                onClick = {
-                    mainViewModel.authenticate(id, password){
-                        isError = it
-                        if(!it) hideFormBox()
-                    }
-                }
+                onClick = { authenticateAndHideBox() }
             ) {
                 Text(
                     text = "Connexion",
@@ -133,3 +133,5 @@ fun LoginFormBox(
     }
 
 }
+
+

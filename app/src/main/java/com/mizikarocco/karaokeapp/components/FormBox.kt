@@ -28,6 +28,10 @@ fun FormBox(
 
     var category by remember { mutableStateOf("") }
 
+    var isError by remember { mutableStateOf(false)}
+
+    val categoryList = listOf("Anglais","Français","Espagnol", "Disney & Enfants", "Zouk", "Chansons de Noel", "Bolero & Tango")
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
@@ -51,32 +55,34 @@ fun FormBox(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
                 value = title,
                 onValueChange = { newText -> title = newText },
-                label = {Text("Titre")}
+                label = {Text("Titre")},
+                isError = isError
             )
 
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
                 value = author,
                 onValueChange = { newText -> author = newText },
-                label = {Text("Auteur")}
+                label = {Text("Auteur")},
+                isError = isError
             )
 
 
-            DropDownMenu(
-                listOf("Anglais","Français","Espagnol", "Disney & Enfants", "Zouk", "Chansons de Noel", "Bolero & Tango")
-            ){ category = it }
+            DropDownMenu(isError, categoryList){ category = it }
 
             Button(
                 modifier = Modifier.padding(vertical = 10.dp),
                 onClick = {
-                mainViewModel.viewModelScope.launch {
-                    Log.d("song added", "category $category, title $title, $author ")
-                    mainViewModel.addSongs(
-                            category,
-                            title,
-                            author
-                    )}
-                hideFormBox()
+                    mainViewModel.viewModelScope.launch {
+                        Log.d("song added", "category $category, title $title, $author ")
+                        if (categoryList.contains(category) && title != "" && author != ""){
+                            mainViewModel.addSongs(category, title, author)
+                            isError = false
+                            hideFormBox()
+                        }else{
+                            isError = true
+                        }
+                    }
                 }
             ) {
                 Text(
