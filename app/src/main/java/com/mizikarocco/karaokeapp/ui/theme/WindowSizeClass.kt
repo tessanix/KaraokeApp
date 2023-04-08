@@ -7,7 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
 
 sealed class WindowSize(val size: Int){
-
     data class Small( val smallSize: Int): WindowSize(smallSize)
     data class Compact( val compactSize: Int): WindowSize(compactSize)
     data class Medium( val mediumSize: Int): WindowSize(mediumSize)

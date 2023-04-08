@@ -48,8 +48,7 @@ val typographySmall = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 30.sp
     ),
-
-    )
+)
 
 val typographyCompact = Typography(
     body1 = TextStyle(

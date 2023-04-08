@@ -25,6 +25,7 @@ import com.mizikarocco.karaokeapp.ui.theme.Orientation
 import com.mizikarocco.karaokeapp.ui.theme.PinkDarkerMic
 
 import com.mizikarocco.karaokeapp.R
+import com.mizikarocco.karaokeapp.ui.theme.largeDimensions
 
 
 @Composable
@@ -55,7 +56,6 @@ fun HomeScreen(
                 fontWeight = FontWeight.ExtraBold,
             )
         }
-
 
         if (AppTheme.orientation == Orientation.Portrait) {
             HomeScreenPortrait(onGoMusics, onGoAbout)

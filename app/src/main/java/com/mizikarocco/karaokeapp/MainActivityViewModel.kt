@@ -2,12 +2,16 @@ package com.mizikarocco.karaokeapp
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.*
 import com.mizikarocco.karaokeapp.data.Song
 import com.mizikarocco.karaokeapp.repository.DataStoreRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.mizikarocco.karaokeapp.data.ClientRequest
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
@@ -20,10 +24,17 @@ class MainActivityViewModel @JvmOverloads constructor(
     private val repository: DataStoreRepository = DataStoreRepository(application)
 ): AndroidViewModel(application) {
 
+    val songRequested = MutableLiveData<Song>()
+
     // liveData to manage Admin mode
-    var isAdmin = repository.readFromDataStore.asLiveData()
+    var isAdmin = repository.readAdminFromDataStore.asLiveData()
     private fun saveToDataStore(adminPrivilege: Boolean) = viewModelScope.launch(Dispatchers.IO){
         repository.saveToDataStore(adminPrivilege)
+    }
+
+    var clientName = repository.readClientNameFromDataStore.asLiveData()
+    fun saveToDataStore(clientName: String) = viewModelScope.launch(Dispatchers.IO){
+        repository.saveToDataStore(clientName)
     }
 
     fun authenticate( id: String, password: String, callbackError: (Boolean) -> Unit){
@@ -50,20 +61,10 @@ class MainActivityViewModel @JvmOverloads constructor(
         Log.d("User disconnected", "admin value is ${isAdmin.value}")
     }
 
-//    suspend fun getUserInfos(): Pair<String, String> {
-//        val resultDatabase = database.child("Users").get().await()
-//        val firstUser = resultDatabase.children.first()
-//
-//        return Pair(
-//            firstUser.child("email").toString(),
-//            firstUser.child("email").toString()
-//        )
-//    }
-
     suspend fun getSongs(): Map<String, List<Song>> {
         //val resultDatabase = database.child("Musics").get().await()
 
-        val resultDatabase = databaseRoot.get().await()
+        val resultDatabase = databaseRoot.child("musics").get().await()
 
         return resultDatabase.children.associate { cat ->
             val songList = cat.children.map { song ->
@@ -83,7 +84,7 @@ class MainActivityViewModel @JvmOverloads constructor(
         newTitle : String,
         newAuthor: String
     ) {
-        val databaseCategory = databaseRoot.child(category)
+        val databaseCategory = databaseRoot.child("musics").child(category)
         val resultDatabase = databaseCategory.get().await()
 
         val numElements = resultDatabase.children.count()
@@ -91,6 +92,22 @@ class MainActivityViewModel @JvmOverloads constructor(
         databaseCategory.child(numElements.toString()).setValue(
             Song(title = newTitle, author = newAuthor)
         )
+    }
+
+    fun addClientRequest (
+        clientName: String,
+        song: Song
+    ) {
+        viewModelScope.launch {
+            val databaseClientRequests = databaseRoot.child("clientRequests")
+            val resultDatabase = databaseClientRequests.get().await()
+
+            val numElements = resultDatabase.children.count()
+
+            databaseClientRequests.child(numElements.toString()).setValue(
+                ClientRequest(clientName, song)
+            )
+        }
     }
 
 }

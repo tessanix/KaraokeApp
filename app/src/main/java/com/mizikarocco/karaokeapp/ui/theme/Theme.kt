@@ -63,7 +63,10 @@ fun KaraokeAppTheme(
         else -> typographyBig
     }
 
-    ExtendsThemes(dimensions = dimensions, orientation = orientation) {
+    ExtendsTheme(
+        dimensions = dimensions,
+        orientation = orientation
+    ) {
         MaterialTheme(
             colors = colors,
             typography = typography,

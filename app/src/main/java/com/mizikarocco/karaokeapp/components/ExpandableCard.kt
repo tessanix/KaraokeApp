@@ -23,37 +23,55 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mizikarocco.karaokeapp.data.Song
 import com.mizikarocco.karaokeapp.ui.theme.PinkDarkerMic
 import com.mizikarocco.karaokeapp.ui.theme.Shapes
 
 
 @Composable
-fun ColumnItem(song: Song) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(Color.White)
-            .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
+fun ColumnItem(
+    song: Song,
+    isSendSongFormDisplayed: Boolean,
+    changeRequestedSong : (Song) -> Unit,
+    displaySendSongForm: (Boolean) -> Unit,
+) {
 
-    ) {
-        Text(
-            text = song.title,
-            modifier = Modifier.padding(horizontal = 10.dp),
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            fontSize = 20.sp
-        )
-        Text(text = song.author,
-            modifier = Modifier.padding(horizontal = 10.dp),
-            color = Color.Black
-        )
+    Row {
+        Column(
+            modifier = Modifier
+                .height(50.dp)
+                .background(Color.White)
+                .border(1.dp, Color.Black, shape = RoundedCornerShape(10.dp)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start
+
+        ) {
+
+            Text(
+                text = song.title,
+                modifier = Modifier.padding(horizontal = 10.dp),
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontSize = 20.sp
+            )
+            Text(
+                text = song.author,
+                modifier = Modifier.padding(horizontal = 10.dp),
+                color = Color.Black
+            )
+
+        }
+
+        Button(onClick = {
+            displaySendSongForm(isSendSongFormDisplayed)
+            changeRequestedSong(song)
+        }
+        ) {
+            Text(text = "Envoyer le morceau à Rocco")
+        }
     }
 }
 @Composable
@@ -162,13 +180,22 @@ fun CategoryHeader(
 }
 
 @Composable
-fun ExpandableCard(dataList: Map<String, List<Song>>, isPortrait: Boolean) {
+fun ExpandableCard(
+    //viewModel: MainActivityViewModel,
+    dataList: Map<String,
+    List<Song>>,
+    isPortrait: Boolean,
+    isSendSongBoxDisplayed: Boolean,
+    changeRequestedSong: (Song) -> Unit,
+    displaySendSongBox : (Boolean) -> Unit
+) {
 
     val expandedStates = remember {
         mutableStateMapOf(
             *dataList.keys.map { it to false }.toTypedArray()
         )
     }
+
 
     LazyColumn(
         Modifier.padding(horizontal = 8.dp, vertical = 0.dp)
@@ -185,9 +212,22 @@ fun ExpandableCard(dataList: Map<String, List<Song>>, isPortrait: Boolean) {
 
             if (expandedStates[category] == true) {
                 if(isPortrait) {
-                    items(songList) { song -> ColumnItem(song = song) }
+                    items(songList) { song ->
+                        ColumnItem(song = song, isSendSongBoxDisplayed, { changeRequestedSong(song) }) {
+                            displaySendSongBox(isSendSongBoxDisplayed)
+                        }
+                    }
                 }else{
-                    item{ TwoColumnsLayout { for (song in songList) { ColumnItem(song = song) } } }
+                    item{
+                        TwoColumnsLayout {
+                            for (song in songList) {
+                                ColumnItem(song = song, isSendSongBoxDisplayed, { changeRequestedSong(song) }) {
+                                    displaySendSongBox(isSendSongBoxDisplayed)
+                                }
+                            }
+
+                        }
+                    }
                 }
             }
 
@@ -199,12 +239,12 @@ fun ExpandableCard(dataList: Map<String, List<Song>>, isPortrait: Boolean) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun ExpandableCardPreview() {
-    ExpandableCard(dataList = mutableMapOf(), true)
-}
-
+//@Preview(showBackground = true)
+//@Composable
+//fun ExpandableCardPreview() {
+//    ExpandableCard(dataList = mutableMapOf(), true)
+//}
+//
 
 
 

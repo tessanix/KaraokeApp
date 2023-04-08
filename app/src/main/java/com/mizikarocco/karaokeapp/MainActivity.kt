@@ -7,7 +7,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mizikarocco.karaokeapp.navigation.SetupNavGraph
 import com.mizikarocco.karaokeapp.ui.theme.KaraokeAppTheme
+import com.mizikarocco.karaokeapp.ui.theme.largeDimensions
 import com.mizikarocco.karaokeapp.ui.theme.rememberWindowSizeClass
+import com.mizikarocco.karaokeapp.ui.theme.smallDimensions
 
 
 class MainActivity : ComponentActivity() {
