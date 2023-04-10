@@ -49,7 +49,7 @@ fun EditNameFormBox(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
                 value = clientName,
                 onValueChange = { newText -> clientName = newText },
-                label = { Text("Titre") },
+                label = { Text("Mon nom") },
                 isError = isError
             )
 
@@ -63,7 +63,6 @@ fun EditNameFormBox(
                         }else{
                             isError = true
                         }
-
                 }
             ) {
                 Text(

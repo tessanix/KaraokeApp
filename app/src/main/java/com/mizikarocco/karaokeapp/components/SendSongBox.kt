@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mizikarocco.karaokeapp.MainActivityViewModel
+import com.mizikarocco.karaokeapp.MusicsViewModel
 import com.mizikarocco.karaokeapp.data.Song
 
 
@@ -20,7 +20,7 @@ import com.mizikarocco.karaokeapp.data.Song
 fun SendSongBox(
     clientName : String,
     song : Song,
-    mainViewModel: MainActivityViewModel,
+    musicsViewModel: MusicsViewModel,
     hideFormBox: () -> Unit
 ) {
     Box(
@@ -50,13 +50,13 @@ fun SendSongBox(
             Text(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
                 text = "Nom: $clientName \n" +
                         "Morceau: ${song.title} \n" +
-                        "\t ${song.author}"
+                        "         ${song.author}"
             )
 
             Row {
                 Button(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    onClick = { mainViewModel.addClientRequest(clientName, song)}//mainViewModel.sendRequestToServer(song) }
+                    onClick = { musicsViewModel.addClientRequest(clientName, song)}//mainViewModel.sendRequestToServer(song) }
                 ) {
                     Text(
                         text = "Ok",

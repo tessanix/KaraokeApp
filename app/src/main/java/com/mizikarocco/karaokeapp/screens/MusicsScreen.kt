@@ -1,10 +1,11 @@
 package com.mizikarocco.karaokeapp.screens
 
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
@@ -12,24 +13,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mizikarocco.karaokeapp.MainActivityViewModel
+import com.mizikarocco.karaokeapp.MusicsViewModel
 import com.mizikarocco.karaokeapp.components.*
-import com.mizikarocco.karaokeapp.data.Song
-import com.mizikarocco.karaokeapp.ui.theme.AppTheme
-import com.mizikarocco.karaokeapp.ui.theme.Orientation
+
 
 
 @Composable
 fun MusicsScreen (
-    mainViewModel: MainActivityViewModel,
     isAdmin: Boolean?,
     clientName: String?,
-    songs : Map<String, List<Song>>,
     onGoHome : () -> Unit
 ) {
-    //val mainViewModel = LocalViewModelStoreOwner.current
-//    val clientNametest = currentCompositionLocalContext
-//    Log.d("clientName", clientNametest.toString())
+    val mainViewModel : MainActivityViewModel = viewModel(viewModelStoreOwner = LocalViewModelStoreOwner.current!!)
+    val musicsViewModel = viewModel<MusicsViewModel>()
+
+    val searchText by musicsViewModel.searchText.collectAsState()
+    val songs by musicsViewModel.songs.collectAsState()
+    val isSearching by musicsViewModel.isSearching.collectAsState()
     var isFormBoxDisplayed by remember { mutableStateOf(false) }
     var isEditNameDisplayed by remember { mutableStateOf(false) }
     var isSendSongBoxDisplayed by remember { mutableStateOf(false) }
@@ -54,48 +57,36 @@ fun MusicsScreen (
     }
 
 
-    if (AppTheme.orientation == Orientation.Portrait) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
 
-            NavBarReturnButton(isPortrait = true, listElements = elementsNavBar, navFunc = onGoHome)
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
 
-            if (songs.isNotEmpty()) {
-                ExpandableCard(
-                    songs,
-                    true,
-                    isSendSongBoxDisplayed,
-                    { song -> mainViewModel.songRequested.value = song }
-                ){ newDisplay -> isSendSongBoxDisplayed = !newDisplay }
-            }
-        }
+        NavBarReturnButton( listElements = elementsNavBar, navFunc = onGoHome)
+        
+        TextField(
+            value = searchText,
+            onValueChange = musicsViewModel::onSearchTextChange,
+            label = { Text("Rechercher") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-    } else{
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            NavBarReturnButton(isPortrait = false, listElements = elementsNavBar, navFunc = onGoHome)
-
-            if(songs.isNotEmpty()){
-                ExpandableCard(
-                    songs,
-                    false,
-                    isSendSongBoxDisplayed,
-                    { song -> mainViewModel.songRequested.value = song }
-                ) { newDisplay -> isSendSongBoxDisplayed = !newDisplay }
-            }
+        if (songs?.isNotEmpty() == true) {
+            ExpandableCard(
+                songs!!,
+                isSendSongBoxDisplayed,
+                { song -> mainViewModel.songRequested.value = song }
+            ){ newDisplay -> isSendSongBoxDisplayed = !newDisplay }
         }
     }
 
+
     if(isSendSongBoxDisplayed && mainViewModel.songRequested.value != null && clientName != null){
         SendSongBox(
-            clientName = clientName!!,
+            clientName = clientName,
             song = mainViewModel.songRequested.value!!,
-            mainViewModel = mainViewModel
+            musicsViewModel = musicsViewModel
         ){ isSendSongBoxDisplayed = false }
     }
 
@@ -106,7 +97,7 @@ fun MusicsScreen (
     }
 
     if(isFormBoxDisplayed){
-        FormBox(mainViewModel = mainViewModel){
+        FormBox(musicsViewModel = musicsViewModel){
             isFormBoxDisplayed = false
         }
     }

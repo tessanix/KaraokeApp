@@ -14,12 +14,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
-import com.mizikarocco.karaokeapp.MainActivityViewModel
+import com.mizikarocco.karaokeapp.MusicsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun FormBox(
-    mainViewModel: MainActivityViewModel,
+    musicsViewModel: MusicsViewModel,
     hideFormBox: () -> Unit
 ){
     var title by remember { mutableStateOf("") }
@@ -73,10 +73,10 @@ fun FormBox(
             Button(
                 modifier = Modifier.padding(vertical = 10.dp),
                 onClick = {
-                    mainViewModel.viewModelScope.launch {
+                    musicsViewModel.viewModelScope.launch {
                         Log.d("song added", "category $category, title $title, $author ")
                         if (categoryList.contains(category) && title != "" && author != ""){
-                            mainViewModel.addSongs(category, title, author)
+                            musicsViewModel.addSongs(category, title, author)
                             isError = false
                             hideFormBox()
                         }else{

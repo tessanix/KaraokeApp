@@ -21,8 +21,6 @@ fun SetupNavGraph(
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
          "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
     }
-    val localState = compositionLocalOf<String?> { error("No state found") }
-
 
     val mainViewModel : MainActivityViewModel = viewModel(viewModelStoreOwner = viewModelStoreOwner)
     val adminState = mainViewModel.isAdmin.observeAsState()
@@ -42,24 +40,19 @@ fun SetupNavGraph(
             CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner) {
                 HomeScreen(
                     admin.value,
-                    mainViewModel,
                     { navController.navigate(route = Screen.Musics.route) }
                 ) { navController.navigate(route = Screen.About.route) }
             }
         }
 
         composable(route = Screen.Musics.route){
-            val songs by produceState<Map<String, List<Song>>>(emptyMap(), mainViewModel) { value = mainViewModel.getSongs() }
+            //val songs by produceState<Map<String, List<Song>>>(emptyMap(), mainViewModel) { value = mainViewModel.getSongs() }
 
-            CompositionLocalProvider(
-                LocalViewModelStoreOwner provides viewModelStoreOwner,
-                localState provides clientName) {
-
+            CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner) {
                     MusicsScreen(
-                        mainViewModel,
                         admin.value,
                         clientName,
-                        songs
+                       // songs
                     ) {
                         navController.navigate(Screen.Home.route) {
                             popUpTo(Screen.Home.route) {

@@ -14,40 +14,22 @@ import com.mizikarocco.karaokeapp.ui.theme.WitheMic
 
 @Composable
 fun NavBarReturnButton(
-    isPortrait: Boolean,
     listElements: List<@Composable ()->Unit>,
     navFunc:()->Unit
 ) {
+      Row(
+          Modifier
+              .background(color = WitheMic)
+              .fillMaxWidth()
+              .height(60.dp),
+          verticalAlignment = Alignment.CenterVertically
+      ) {
 
-    if(isPortrait) {
-          Row(
-              Modifier
-                  .background(color = WitheMic)
-                  .fillMaxWidth()
-                  .height(60.dp),
-              verticalAlignment = Alignment.CenterVertically
-          ) {
+          ReturnBackButton(navFunc)
 
-              ReturnBackButton(navFunc)
+          for (element in listElements) { element() }
 
-              for (element in listElements) { element() }
-
-          }
-
-    } else{
-          Column(
-              Modifier
-                  .background(color = WitheMic)
-                  .fillMaxHeight()
-                  .width(60.dp),
-              horizontalAlignment = Alignment.CenterHorizontally
-          ) {
-
-              ReturnBackButton(navFunc)
-
-              for (element in listElements) { element() }
-          }
-    }
+      }
 }
 
 
@@ -58,7 +40,8 @@ fun ReturnBackButton(
     IconButton(onClick = navFunc) {
         Icon(
             modifier = Modifier.size(40.dp),
-            imageVector = Icons.Default.ArrowBack, contentDescription = ""
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = null
         )
     }
 }
