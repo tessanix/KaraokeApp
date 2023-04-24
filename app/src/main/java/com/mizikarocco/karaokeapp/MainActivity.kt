@@ -7,11 +7,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mizikarocco.karaokeapp.navigation.SetupNavGraph
 import com.mizikarocco.karaokeapp.ui.theme.KaraokeAppTheme
-import com.mizikarocco.karaokeapp.ui.theme.largeDimensions
 import com.mizikarocco.karaokeapp.ui.theme.rememberWindowSizeClass
-import com.mizikarocco.karaokeapp.ui.theme.smallDimensions
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {

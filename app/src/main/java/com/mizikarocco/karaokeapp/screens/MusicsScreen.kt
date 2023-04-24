@@ -1,6 +1,7 @@
 package com.mizikarocco.karaokeapp.screens
 
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -8,54 +9,44 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.SignalWifiConnectedNoInternet4
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mizikarocco.karaokeapp.MainActivityViewModel
-import com.mizikarocco.karaokeapp.MusicsViewModel
+import com.mizikarocco.karaokeapp.MainViewModel
 import com.mizikarocco.karaokeapp.components.*
-
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun MusicsScreen (
-    isAdmin: Boolean?,
     clientName: String?,
     onGoHome : () -> Unit
 ) {
-    val mainViewModel : MainActivityViewModel = viewModel(viewModelStoreOwner = LocalViewModelStoreOwner.current!!)
-    val musicsViewModel = viewModel<MusicsViewModel>()
+    val mainViewModel : MainViewModel = viewModel(viewModelStoreOwner = LocalViewModelStoreOwner.current!!)
 
-    val searchText by musicsViewModel.searchText.collectAsState()
-    val songs by musicsViewModel.songs.collectAsState()
-    val isSearching by musicsViewModel.isSearching.collectAsState()
-    var isFormBoxDisplayed by remember { mutableStateOf(false) }
+    val searchText by mainViewModel.searchText.collectAsState()
+    val songs by mainViewModel.songs.collectAsState()
+    val isConnecting by mainViewModel.isConnecting.collectAsState()
+    val showConnectionError by mainViewModel.showConnectionError.collectAsState()
+
     var isEditNameDisplayed by remember { mutableStateOf(false) }
     var isSendSongBoxDisplayed by remember { mutableStateOf(false) }
+    var isToastDisplayed by remember { mutableStateOf(false) }
+    val animatableAlpha = remember { Animatable(initialValue = 1F) }
+    var toastTextMessage by remember{ mutableStateOf("")}
+    var toastIcon by remember{ mutableStateOf(Icons.Default.Verified) }
 
-
-    val elementsNavBar = if(isAdmin == true) {
-        listOf<@Composable () -> Unit> {
-            AddSongButton(isFormBoxDisplayed) { newDisplay ->
-                isFormBoxDisplayed = !newDisplay
-            }
-
-            AddClientName(isEditNameDisplayed) { newDisplay ->
-                isEditNameDisplayed = !newDisplay
-            }
-        }
-    } else {
-        listOf<@Composable () -> Unit> {
-            AddClientName(isEditNameDisplayed) { newDisplay ->
-                isEditNameDisplayed = !newDisplay
-            }
+    val elementsNavBar = listOf<@Composable () -> Unit> {
+        AddClientName(isEditNameDisplayed) { newDisplay ->
+            isEditNameDisplayed = !newDisplay
         }
     }
-
 
 
     Column(
@@ -67,7 +58,7 @@ fun MusicsScreen (
         
         TextField(
             value = searchText,
-            onValueChange = musicsViewModel::onSearchTextChange,
+            onValueChange = mainViewModel::onSearchTextChange,
             label = { Text("Rechercher") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -86,8 +77,19 @@ fun MusicsScreen (
         SendSongBox(
             clientName = clientName,
             song = mainViewModel.songRequested.value!!,
-            musicsViewModel = musicsViewModel
-        ){ isSendSongBoxDisplayed = false }
+            mainViewModel = mainViewModel,
+            { text, icon ->
+                toastTextMessage = text
+                toastIcon = icon
+
+                mainViewModel.viewModelScope.launch{
+                   isToastDisplayed = false
+                   animatableAlpha.snapTo(1F)
+                   isToastDisplayed = true
+               }
+
+            }
+        ) { isSendSongBoxDisplayed = false }
     }
 
     if(isEditNameDisplayed){
@@ -96,13 +98,13 @@ fun MusicsScreen (
         }
     }
 
-    if(isFormBoxDisplayed){
-        FormBox(musicsViewModel = musicsViewModel){
-            isFormBoxDisplayed = false
-        }
-    }
+    if(isConnecting) LoadingAnimation()
 
+    if(showConnectionError) CustomToast("Erreur de connexion!", Icons.Default.SignalWifiConnectedNoInternet4, null){}
+
+    if(isToastDisplayed) CustomToast(toastTextMessage, toastIcon, animatableAlpha) { isToastDisplayed = false }
 }
+
 
 @Composable
 fun AddClientName(
@@ -118,22 +120,3 @@ fun AddClientName(
     }
 }
 
-@Composable
-fun AddSongButton(
-    displayForm: Boolean,
-    addFunc: (Boolean) -> Unit
-){
-    IconButton(onClick = { addFunc(displayForm) } ) {
-        Icon(
-            modifier = Modifier.size(40.dp),
-            imageVector = Icons.Default.Add,
-            contentDescription = "add song"
-        )
-    }
-}
-
-//@Composable
-//@Preview(showBackground = true)
-//fun MusicsScreenPreview(){
-//    MusicsScreen{ }
-//}

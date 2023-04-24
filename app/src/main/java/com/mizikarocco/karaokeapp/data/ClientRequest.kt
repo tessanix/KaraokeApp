@@ -1,9 +1,7 @@
 package com.mizikarocco.karaokeapp.data
 
 data class ClientRequest(
-    val clientName: String,
-    val song : Song
+    val id: String,
+    val title : String,
+    val author: String
 )
-
-
-

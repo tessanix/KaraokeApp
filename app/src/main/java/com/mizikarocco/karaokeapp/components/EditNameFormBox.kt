@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mizikarocco.karaokeapp.MainActivityViewModel
+import com.mizikarocco.karaokeapp.MainViewModel
 
 
 @Composable
 fun EditNameFormBox(
-    mainViewModel: MainActivityViewModel,
+    mainViewModel: MainViewModel,
     hideFormBox: () -> Unit
 ) {
     var clientName by remember { mutableStateOf("") }
