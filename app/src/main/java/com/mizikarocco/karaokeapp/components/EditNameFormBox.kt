@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mizikarocco.karaokeapp.MainViewModel
+import com.mizikarocco.karaokeapp.ui.theme.AppTheme
 
 
 @Composable
@@ -23,6 +24,8 @@ fun EditNameFormBox(
     var clientName by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false)}
 
+    val text = if(mainViewModel.clientName.value.isNullOrBlank()) "Vous n'avez pas encore de nom"
+        else "Votre nom actuel est: ${mainViewModel.clientName.value}"
 
     Box(
     contentAlignment = Alignment.Center,
@@ -45,6 +48,14 @@ fun EditNameFormBox(
                     )
                 }
             }
+            Text(
+                modifier = Modifier.padding(AppTheme.dimens.medium),
+                text = text,
+                color = Color.Black,
+                style = MaterialTheme.typography.h3,
+                textAlign = TextAlign.Center
+            )
+
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp),
                 value = clientName,

@@ -1,6 +1,5 @@
 package com.mizikarocco.karaokeapp.components
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -29,6 +28,7 @@ fun SendSongBox(
     updateToastMessageInMusicsScreen: (String, ImageVector) -> Unit,
     hideFormBox: () -> Unit
 ) {
+    println("SONG REQUEST: $song")
     val requestResponse by mainViewModel.socketState.collectAsState()
 
     if(requestResponse != mainViewModel.previousSocketState) {
@@ -74,7 +74,11 @@ fun SendSongBox(
                 Button(
                     modifier = Modifier.padding(vertical = 10.dp),
                     onClick = {
-                        mainViewModel.sendClientRequest(clientName, ClientRequest(song.id, song.title, song.author))
+                        if(clientName.isNotBlank())
+                            mainViewModel.sendClientRequest(ClientRequest(clientName, song.title, song.author))
+                        else
+                            updateToastMessageInMusicsScreen("Entrez d'abord votre nom", Icons.Default.Error)
+                        hideFormBox()
                     }
                 ) {
                     Text(

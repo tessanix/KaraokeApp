@@ -71,10 +71,10 @@ class MainViewModel @Inject constructor(
             _songs.asLiveData().value
         )
 
-    fun sendClientRequest(clientName:String, clientRequest: ClientRequest) {
+    fun sendClientRequest(clientRequest: ClientRequest) {
         viewModelScope.launch {
             _isConnecting.value = true
-            api.sendClientRequest(clientName, clientRequest)
+            api.sendClientRequest(clientRequest)
         }
     }
     override fun onCleared(){

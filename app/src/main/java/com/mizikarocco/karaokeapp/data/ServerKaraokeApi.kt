@@ -2,7 +2,6 @@ package com.mizikarocco.karaokeapp.data
 
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.plugins.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.websocket.*
@@ -30,21 +29,13 @@ class ServerKaraokeApi(private val client: HttpClient) : ServerApi{
     }
 
 
-    override suspend fun sendClientRequest(
-        clientName: String,
-        request: ClientRequest
-    ) {
+    override suspend fun sendClientRequest(request: ClientRequest) {
         session?.outgoing?.send(
             Frame.Text(
                 Json.encodeToString(
                     WebSocketRequest(
                         action = "addRequest",
-                        data = mapOf(
-                            "id" to request.id,
-                            "title" to request.title,
-                            "author" to request.author,
-                            "clientName" to clientName
-                        )
+                        data = request
                     )
                 )
             )
