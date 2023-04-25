@@ -5,13 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Verified
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,20 +22,9 @@ fun SendSongBox(
     clientName : String,
     song : Song,
     mainViewModel: MainViewModel,
-    updateToastMessageInMusicsScreen: (String, ImageVector) -> Unit,
+    showSnackBarError: () -> Unit,
     hideFormBox: () -> Unit
 ) {
-    println("SONG REQUEST: $song")
-    val requestResponse by mainViewModel.socketState.collectAsState()
-
-    if(requestResponse != mainViewModel.previousSocketState) {
-        mainViewModel.previousSocketState = requestResponse
-        if (requestResponse!!.status == "Success" && requestResponse!!.action == "addRequest")
-            updateToastMessageInMusicsScreen("Requête envoyée!", Icons.Default.Verified)
-        else updateToastMessageInMusicsScreen("Erreur lors de l'envoie.", Icons.Default.Error)
-        hideFormBox()
-    }
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
@@ -74,11 +60,11 @@ fun SendSongBox(
                 Button(
                     modifier = Modifier.padding(vertical = 10.dp),
                     onClick = {
-                        if(clientName.isNotBlank())
+                        if(clientName.isNotBlank()) {
                             mainViewModel.sendClientRequest(ClientRequest(clientName, song.title, song.author))
-                        else
-                            updateToastMessageInMusicsScreen("Entrez d'abord votre nom", Icons.Default.Error)
-                        hideFormBox()
+                            hideFormBox()
+                        }
+                        else showSnackBarError()
                     }
                 ) {
                     Text(
@@ -101,7 +87,4 @@ fun SendSongBox(
             }
         }
     }
-
-
-
 }

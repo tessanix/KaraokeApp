@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mizikarocco.karaokeapp.MainViewModel
+import com.mizikarocco.karaokeapp.data.WebSocketResponse
 import com.mizikarocco.karaokeapp.screens.AboutScreen
 import com.mizikarocco.karaokeapp.screens.HomeScreen
 import com.mizikarocco.karaokeapp.screens.MusicsScreen
@@ -26,6 +27,7 @@ fun SetupNavGraph(
     val clientNameState = mainViewModel.clientName.observeAsState()
     val clientName by remember { clientNameState }
 
+    var latestSocketState by remember { mutableStateOf<WebSocketResponse?>(null) }
 
     NavHost(
         navController = navController,
@@ -44,7 +46,7 @@ fun SetupNavGraph(
             //val songs by produceState<Map<String, List<Song>>>(emptyMap(), mainViewModel) { value = mainViewModel.getSongs() }
 
             CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner) {
-                    MusicsScreen(clientName) {
+                    MusicsScreen(clientName, latestSocketState, { latestSocketState = it }) {
                         navController.navigate(Screen.Home.route) {
                             popUpTo(Screen.Home.route) {
                                 inclusive = true

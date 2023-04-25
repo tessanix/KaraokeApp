@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.mizikarocco.karaokeapp.data.ClientRequest
 import com.mizikarocco.karaokeapp.data.ServerKaraokeApi
 import com.mizikarocco.karaokeapp.data.Song
-import com.mizikarocco.karaokeapp.data.WebSocketResponse
 import com.mizikarocco.karaokeapp.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +35,6 @@ class MainViewModel @Inject constructor(
         .catch { t -> _showConnectionError.value = t is ConnectException }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    var previousSocketState: WebSocketResponse? = null
 
     val songRequested = MutableLiveData<Song>()
 
