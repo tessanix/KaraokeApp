@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -38,6 +40,7 @@ import com.mizikarocco.karaokeapp.components.NavBarReturnButton
 import com.mizikarocco.karaokeapp.components.SendSongBox
 import com.mizikarocco.karaokeapp.components.SnackbarManager
 import com.mizikarocco.karaokeapp.data.WebSocketResponse
+import com.mizikarocco.karaokeapp.ui.theme.spacing
 import kotlinx.coroutines.launch
 
 
@@ -106,20 +109,25 @@ fun MusicsScreen (
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-
                 TextField(
                     value = searchText,
                     onValueChange = mainViewModel::onSearchTextChange,
                     label = { Text("Rechercher") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.medium),
+                    shape = MaterialTheme.shapes.small,
+                    colors = textFieldColors(
+                        textColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                    )
                 )
 
                 if (songs?.isNotEmpty() == true) {
                     ExpandableCard(
-                        songs!!,
-                        isSendSongBoxDisplayed,
-                        { song -> mainViewModel.songRequested.value = song }
-                    ) { newDisplay -> isSendSongBoxDisplayed = !newDisplay }
+                        songListMappedByCategories = songs!!,
+                        isSendSongBoxDisplayed = isSendSongBoxDisplayed,
+                        registerRequestedSong = { song -> mainViewModel.songRequested.value = song },
+                        displaySendSongBox = { newDisplay -> isSendSongBoxDisplayed = !newDisplay }
+                    )
                 }
             }
 
@@ -129,18 +137,20 @@ fun MusicsScreen (
                     clientName = clientName,
                     song = mainViewModel.songRequested.value!!,
                     mainViewModel = mainViewModel,
-                    {
+                    showSnackBarError = {
                         coroutineScope.launch{
                             snackbarHostState.showSnackbar("Vous devez entrer votre nom d'abord!", duration = SnackbarDuration.Short)
                         }
-                    }
-                ) { isSendSongBoxDisplayed = false }
+                    },
+                    hideFormBox = { isSendSongBoxDisplayed = false }
+                )
             }
 
             if (isEditNameDisplayed) {
-                EditNameFormBox(mainViewModel = mainViewModel) {
-                    isEditNameDisplayed = false
-                }
+                EditNameFormBox(
+                    mainViewModel = mainViewModel,
+                    hideFormBox = { isEditNameDisplayed = false }
+                )
             }
 
             if (isConnecting) LoadingAnimation()

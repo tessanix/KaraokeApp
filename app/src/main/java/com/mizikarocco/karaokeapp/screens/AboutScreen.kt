@@ -27,6 +27,7 @@ import com.mizikarocco.karaokeapp.ui.theme.spacing
 
 @Composable
 fun AboutScreen(onGoHome : () -> Unit) {
+
     val gradient = Brush.linearGradient(
         .14f to Color(0xffad720f),
         .47f to Color(0xff39b7ed),

@@ -25,20 +25,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mizikarocco.karaokeapp.ui.theme.GreenSuccess
-import com.mizikarocco.karaokeapp.ui.theme.RedError
 import com.mizikarocco.karaokeapp.ui.theme.spacing
 
 @Composable
 fun SnackbarManager(data: SnackbarData) {
     when {
         data.visuals.message.contains("Erreur") -> {
-            CustomSnackbar( Icons.Default.Error, RedError, data.visuals.message )
+            CustomSnackbar( Icons.Default.Error, MaterialTheme.colorScheme.error, data.visuals.message )
         }
         data.visuals.message.contains("votre nom") -> {
-            CustomSnackbar( Icons.Default.Error, RedError, data.visuals.message )
+            CustomSnackbar( Icons.Default.Error, MaterialTheme.colorScheme.error, data.visuals.message )
         }
         data.visuals.message.contains("connexion") -> {
-            CustomSnackbar( Icons.Default.SignalWifiConnectedNoInternet4, RedError, data.visuals.message )
+            CustomSnackbar( Icons.Default.SignalWifiConnectedNoInternet4, MaterialTheme.colorScheme.error, data.visuals.message )
         }
         data.visuals.message.contains("envoyée!") -> {
             CustomSnackbar( Icons.Default.Verified, GreenSuccess, data.visuals.message )
