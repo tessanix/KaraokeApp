@@ -14,10 +14,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -128,7 +133,7 @@ fun ColumnItem(
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryHeader(
     categoryTitle: String,
@@ -161,14 +166,13 @@ fun CategoryHeader(
                     .padding(horizontal = 10.dp),
                 color = Color.White,
                 text = categoryTitle,
-                fontSize = MaterialTheme.typography.h6.fontSize,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             IconButton(
                 modifier = Modifier
-                    .alpha(ContentAlpha.medium)
                     .weight(1f)
                     .rotate(rotationState),
                 onClick = { updateExpandedState(expandedState) }

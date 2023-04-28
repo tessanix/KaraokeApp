@@ -4,20 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Snackbar
-import androidx.compose.material.SnackbarData
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.SignalWifiConnectedNoInternet4
 import androidx.compose.material.icons.filled.Verified
+import androidx.compose.material3.SnackbarData
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,24 +24,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mizikarocco.karaokeapp.ui.theme.AppTheme
 import com.mizikarocco.karaokeapp.ui.theme.GreenSuccess
 import com.mizikarocco.karaokeapp.ui.theme.RedError
+import com.mizikarocco.karaokeapp.ui.theme.spacing
 
 @Composable
 fun SnackbarManager(data: SnackbarData) {
     when {
-        data.message.contains("Erreur") -> {
-            CustomSnackbar( Icons.Default.Error, RedError, data.message )
+        data.visuals.message.contains("Erreur") -> {
+            CustomSnackbar( Icons.Default.Error, RedError, data.visuals.message )
         }
-        data.message.contains("votre nom") -> {
-            CustomSnackbar( Icons.Default.Error, RedError, data.message )
+        data.visuals.message.contains("votre nom") -> {
+            CustomSnackbar( Icons.Default.Error, RedError, data.visuals.message )
         }
-        data.message.contains("connexion") -> {
-            CustomSnackbar( Icons.Default.SignalWifiConnectedNoInternet4, RedError, data.message )
+        data.visuals.message.contains("connexion") -> {
+            CustomSnackbar( Icons.Default.SignalWifiConnectedNoInternet4, RedError, data.visuals.message )
         }
-        data.message.contains("envoyée!") -> {
-            CustomSnackbar( Icons.Default.Verified, GreenSuccess, data.message )
+        data.visuals.message.contains("envoyée!") -> {
+            CustomSnackbar( Icons.Default.Verified, GreenSuccess, data.visuals.message )
         }
     }
 }
@@ -54,8 +53,8 @@ fun CustomSnackbar(icon: ImageVector, backgroundColor: Color, message: String ) 
     Snackbar(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(AppTheme.dimens.medium),
-        backgroundColor = backgroundColor,
+            .padding(MaterialTheme.spacing.medium),
+        containerColor = backgroundColor,
         contentColor = Color.Black,
     ) {
         Row(
@@ -71,20 +70,17 @@ fun CustomSnackbar(icon: ImageVector, backgroundColor: Color, message: String ) 
                 contentDescription = null
             )
 
-            Spacer( Modifier.width(AppTheme.dimens.medium) )
+            Spacer( Modifier.width(MaterialTheme.spacing.medium) )
 
             Text(
                 text = message,
                 //color = Color.Black,
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 maxLines = 1
             )
-
         }
-
     }
-
 }
 
 

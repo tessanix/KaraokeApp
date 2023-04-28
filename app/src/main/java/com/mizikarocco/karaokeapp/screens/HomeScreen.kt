@@ -3,10 +3,10 @@ package com.mizikarocco.karaokeapp.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,9 +15,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.mizikarocco.karaokeapp.R
-import com.mizikarocco.karaokeapp.ui.theme.AppTheme
 import com.mizikarocco.karaokeapp.ui.theme.PinkDarkerMic
+import com.mizikarocco.karaokeapp.ui.theme.spacing
 
 
 @Composable
@@ -50,20 +51,27 @@ fun NavButton(text : String, navFunc: () -> Unit){
     Button(
         onClick =  navFunc,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = PinkDarkerMic,
+            containerColor = PinkDarkerMic,
             contentColor = Color.White
         ),
         modifier = Modifier
             .fillMaxWidth(0.7f)
-            .padding(AppTheme.dimens.medium),
+            .padding(MaterialTheme.spacing.medium),
         shape = CircleShape
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.h3,
+            style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(AppTheme.dimens.medium)
+            modifier = Modifier.padding(MaterialTheme.spacing.medium)
         )
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview(){
+    HomeScreen(onGoMusics = {}, onGoAbout = {})
 }

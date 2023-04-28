@@ -5,6 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,9 +20,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mizikarocco.karaokeapp.MainViewModel
-import com.mizikarocco.karaokeapp.ui.theme.AppTheme
+import com.mizikarocco.karaokeapp.ui.theme.spacing
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditNameFormBox(
     mainViewModel: MainViewModel,
@@ -49,10 +57,10 @@ fun EditNameFormBox(
                 }
             }
             Text(
-                modifier = Modifier.padding(AppTheme.dimens.medium),
+                modifier = Modifier.padding(MaterialTheme.spacing.medium),
                 text = text,
                 color = Color.Black,
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )
 

@@ -6,16 +6,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,6 +41,7 @@ import com.mizikarocco.karaokeapp.data.WebSocketResponse
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicsScreen (
     clientName: String?,
@@ -54,8 +56,10 @@ fun MusicsScreen (
     val songs by mainViewModel.songs.collectAsState()
     val isConnecting by mainViewModel.isConnecting.collectAsState()
     val showConnectionError by mainViewModel.showConnectionError.collectAsState()
-    val scaffoldState = rememberScaffoldState()
+
+    val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+
     var isEditNameDisplayed by remember { mutableStateOf(false) }
     var isSendSongBoxDisplayed by remember { mutableStateOf(false) }
 
@@ -74,11 +78,11 @@ fun MusicsScreen (
 
                 if ((webSocketResponse.status == "Success") && (webSocketResponse.action == "addRequest"))
                     coroutineScope.launch{
-                        scaffoldState.snackbarHostState.showSnackbar("Requête envoyée!", duration = SnackbarDuration.Short)
+                        snackbarHostState.showSnackbar("Requête envoyée!", duration = SnackbarDuration.Short)
                     }
                 else  {
                     coroutineScope.launch{
-                        scaffoldState.snackbarHostState.showSnackbar("Erreur lors de l'envoie.", duration = SnackbarDuration.Short)
+                        snackbarHostState.showSnackbar("Erreur lors de l'envoie.", duration = SnackbarDuration.Short)
                     }
                 }
                 modifyLatestSocketState(webSocketResponse)
@@ -88,11 +92,11 @@ fun MusicsScreen (
     }
 
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = { NavBarReturnButton(listElements = elementsNavBar, navFunc = onGoHome) },
         snackbarHost = {
-            // reuse default SnackbarHost to have default animation and timing handling
-            SnackbarHost(it) { data -> SnackbarManager(data) }
+            SnackbarHost(snackbarHostState) {
+                data -> SnackbarManager(data)
+            }
         },
         content = { innerPadding ->
             Column(
@@ -127,7 +131,7 @@ fun MusicsScreen (
                     mainViewModel = mainViewModel,
                     {
                         coroutineScope.launch{
-                            scaffoldState.snackbarHostState.showSnackbar("Vous devez entrer votre nom d'abord!", duration = SnackbarDuration.Short)
+                            snackbarHostState.showSnackbar("Vous devez entrer votre nom d'abord!", duration = SnackbarDuration.Short)
                         }
                     }
                 ) { isSendSongBoxDisplayed = false }
@@ -142,7 +146,7 @@ fun MusicsScreen (
             if (isConnecting) LoadingAnimation()
 
             if (showConnectionError) coroutineScope.launch{
-                scaffoldState.snackbarHostState.showSnackbar("Erreur de connexion!", duration = SnackbarDuration.Indefinite)
+                snackbarHostState.showSnackbar("Erreur de connexion!", duration = SnackbarDuration.Indefinite)
             }
         }
     )
@@ -163,4 +167,19 @@ fun AddClientName(
         )
     }
 }
+
+
+//@Preview(showBackground = true)
+//@Composable
+//fun MusicsScreenPreview(){
+//    LocalViewModelStoreOwner = compositionLocalOf { MainViewModel() }
+//    CompositionLocalProvider(LocalViewModelStoreOwner provides MainViewModel()) {
+//        MusicsScreen(
+//            clientName = null,
+//            latestSocketState = null,
+//            modifyLatestSocketState = {},
+//            onGoHome = {}
+//        )
+//    }
+//}
 

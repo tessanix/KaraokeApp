@@ -35,33 +35,35 @@ fun SetupNavGraph(
     ){
 
         composable(route = Screen.Home.route){
-            CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner) {
-                HomeScreen({ navController.navigate(route = Screen.Musics.route) }) {
-                    navController.navigate(route = Screen.About.route)
-                }
-            }
+            HomeScreen(
+                onGoMusics = { navController.navigate(route = Screen.Musics.route) },
+                onGoAbout = { navController.navigate(route = Screen.About.route) }
+            )
         }
 
         composable(route = Screen.Musics.route){
-            //val songs by produceState<Map<String, List<Song>>>(emptyMap(), mainViewModel) { value = mainViewModel.getSongs() }
-
             CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner) {
-                    MusicsScreen(clientName, latestSocketState, { latestSocketState = it }) {
+                MusicsScreen(
+                    clientName = clientName,
+                    latestSocketState = latestSocketState,
+                    modifyLatestSocketState = { latestSocketState = it },
+                    onGoHome = {
                         navController.navigate(Screen.Home.route) {
-                            popUpTo(Screen.Home.route) {
-                                inclusive = true
-                            }
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
                     }
-                }
+                )
             }
         }
 
         composable(route = Screen.About.route){
-            AboutScreen{
-                navController.navigate(Screen.Home.route){
-                    popUpTo(Screen.Home.route){ inclusive = true }
+            AboutScreen(
+                onGoHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route){ inclusive = true }
+                    }
                 }
-            }
+            )
         }
     }
 }
