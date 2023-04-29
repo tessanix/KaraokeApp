@@ -6,7 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,10 +23,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mizikarocco.karaokeapp.R
-import com.mizikarocco.karaokeapp.components.NavBarReturnButton
+import com.mizikarocco.karaokeapp.components.CustomTopAppBar
 import com.mizikarocco.karaokeapp.ui.theme.spacing
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(onGoHome : () -> Unit) {
 
@@ -35,65 +38,70 @@ fun AboutScreen(onGoHome : () -> Unit) {
         start = Offset.Zero,
         end = Offset.Infinite
     )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(gradient),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-
-        NavBarReturnButton(listElements = emptyList(), navFunc = onGoHome)
-
-        Image(
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.medium)
-                .clip(RoundedCornerShape(50.dp))
-                .border(5.dp, Color.White, RoundedCornerShape(50.dp))
-                .fillMaxWidth(0.8f)
-                .weight(.4f),
-            contentScale = ContentScale.FillBounds,
-            painter = painterResource(R.drawable.rocco_1),
-            contentDescription = null,
-        )
-
-        Column(
-            modifier = Modifier.weight(.6f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-
-            Image(
+    Scaffold(
+        topBar = {
+            CustomTopAppBar(screenName = "À propos ...", listElements = emptyList(),  navFunc = onGoHome)
+        },
+        content = { innerPading ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f),
-                contentScale = ContentScale.FillWidth,
-                painter = painterResource(R.drawable.name_and_rocco),
-                contentDescription = null,
-            )
+                    .fillMaxSize()
+                    .background(gradient)
+                    .padding(innerPading),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
 
-            Text(
-                text = "Animateur Karaoké",
-                color = Color.White,
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center
-            )
+                Image(
+                    modifier = Modifier
+                        .padding(MaterialTheme.spacing.medium)
+                        .clip(RoundedCornerShape(50.dp))
+                        .border(5.dp, Color.White, RoundedCornerShape(50.dp))
+                        .fillMaxWidth(0.8f)
+                        .weight(.4f),
+                    contentScale = ContentScale.FillBounds,
+                    painter = painterResource(R.drawable.rocco_1),
+                    contentDescription = null,
+                )
 
-            Text(
-                text = "Anniversaires, Soirées, Manifestations, etc.",
-                color = Color.White,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+                Column(
+                    modifier = Modifier.weight(.6f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround
+                ) {
 
-            Text(
-                text = "✆ 0690 47 18 18",
-                color = Color.White,
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
-            )
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f),
+                        contentScale = ContentScale.FillWidth,
+                        painter = painterResource(R.drawable.name_and_rocco),
+                        contentDescription = null,
+                    )
+
+                    Text(
+                        text = "Animateur Karaoké",
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = "Anniversaires, Soirées, Manifestations, etc.",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = "✆ 0690 47 18 18",
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
-    }
+    )
 }
 
 @Preview(showBackground = true)

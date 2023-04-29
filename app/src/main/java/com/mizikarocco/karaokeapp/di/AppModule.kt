@@ -20,7 +20,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class) // allow Module to stay alive since the app is alive
 object AppModule {
 
-
     @Singleton
     @Provides
     fun provideDataStore(@ApplicationContext appContext: Context): DataStoreRepository {

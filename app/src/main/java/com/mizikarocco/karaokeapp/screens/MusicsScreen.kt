@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.material3.Icon
@@ -33,10 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mizikarocco.karaokeapp.MainViewModel
+import com.mizikarocco.karaokeapp.components.CustomTopAppBar
 import com.mizikarocco.karaokeapp.components.EditNameFormBox
 import com.mizikarocco.karaokeapp.components.ExpandableCard
 import com.mizikarocco.karaokeapp.components.LoadingAnimation
-import com.mizikarocco.karaokeapp.components.NavBarReturnButton
 import com.mizikarocco.karaokeapp.components.SendSongBox
 import com.mizikarocco.karaokeapp.components.SnackbarManager
 import com.mizikarocco.karaokeapp.data.WebSocketResponse
@@ -95,7 +95,9 @@ fun MusicsScreen (
     }
 
     Scaffold(
-        topBar = { NavBarReturnButton(listElements = elementsNavBar, navFunc = onGoHome) },
+        topBar = {
+            CustomTopAppBar(screenName = "Musiques", listElements = elementsNavBar,  navFunc = onGoHome)
+        },
         snackbarHost = {
             SnackbarHost(snackbarHostState) {
                 data -> SnackbarManager(data)
@@ -113,7 +115,9 @@ fun MusicsScreen (
                     value = searchText,
                     onValueChange = mainViewModel::onSearchTextChange,
                     label = { Text("Rechercher") },
-                    modifier = Modifier.fillMaxWidth().padding(MaterialTheme.spacing.medium),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MaterialTheme.spacing.medium),
                     shape = MaterialTheme.shapes.small,
                     colors = textFieldColors(
                         textColor = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -148,7 +152,7 @@ fun MusicsScreen (
 
             if (isEditNameDisplayed) {
                 EditNameFormBox(
-                    mainViewModel = mainViewModel,
+                   // mainViewModel = mainViewModel,
                     hideFormBox = { isEditNameDisplayed = false }
                 )
             }
@@ -172,7 +176,7 @@ fun AddClientName(
     IconButton(onClick = { addFunc(displayEditNameForm) } ) {
         Icon(
             modifier = Modifier.size(40.dp),
-            imageVector = Icons.Default.AccountBox,
+            imageVector = Icons.Default.EditNote,
             contentDescription = "edit client name"
         )
     }
