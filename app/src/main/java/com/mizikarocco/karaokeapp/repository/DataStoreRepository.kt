@@ -17,20 +17,27 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = PREFERENCE_PRIVILEGE
 )
 
-class DataStoreRepository(private val context: Context,
-) {
+class DataStoreRepository(private val context: Context) {
 
     private object PreferenceKeys {
-        val adminKey = booleanPreferencesKey("isAdmin")
+        //val adminKey = booleanPreferencesKey("isAdmin")
+        val clientNameKey = stringPreferencesKey("clientName")
     }
 
-    suspend fun saveToDataStore(isAdminPreference: Boolean) {
+//    suspend fun saveToDataStore(isAdminPreference: Boolean) {
+//        context.dataStore.edit { settings ->
+//            settings[PreferenceKeys.adminKey] = isAdminPreference
+//        }
+//    }
+
+    suspend fun saveToDataStore(clientNamePreference: String) {
         context.dataStore.edit { settings ->
-            settings[PreferenceKeys.adminKey] = isAdminPreference
+            settings[PreferenceKeys.clientNameKey] = clientNamePreference
         }
     }
 
-    val readFromDataStore: Flow<Boolean> = context.dataStore.data
+    val data = context.dataStore
+        .data
         .catch { exception ->
             if (exception is IOException) {
                 exception.message?.let { stringMessage ->
@@ -41,8 +48,16 @@ class DataStoreRepository(private val context: Context,
                 throw exception
             }
         }
+
+//    val readAdminFromDataStore: Flow<Boolean> = data
+//        .map { preferences ->
+//            val adminPrivilege = preferences[PreferenceKeys.adminKey] ?: false
+//            adminPrivilege
+//        }
+
+    val readClientNameFromDataStore: Flow<String>  = data
         .map { preferences ->
-            val adminPrivilege = preferences[PreferenceKeys.adminKey] ?: false
+            val adminPrivilege = preferences[PreferenceKeys.clientNameKey] ?: ""
             adminPrivilege
         }
 
