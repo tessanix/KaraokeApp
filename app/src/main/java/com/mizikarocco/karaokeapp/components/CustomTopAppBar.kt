@@ -9,7 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,8 +32,8 @@ fun CustomTopAppBar(
                 for (element in listElements) { element() }
             }
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(5.dp)
+        colors = topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(5.dp),
         )
     )
 }

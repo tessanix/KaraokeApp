@@ -76,7 +76,7 @@ fun MusicsScreen (
 
     LaunchedEffect(true) {
         mainViewModel.socketState.collect { webSocketResponse ->
-            println("WEBSOKET IN COROUTINE: $webSocketResponse")
+            //println("WEBSOKET IN COROUTINE: $webSocketResponse")
             if(webSocketResponse!=null && webSocketResponse!=latestSocketState) {
 
                 if ((webSocketResponse.status == "Success") && (webSocketResponse.action == "addRequest"))
@@ -120,8 +120,8 @@ fun MusicsScreen (
                         .padding(MaterialTheme.spacing.medium),
                     shape = MaterialTheme.shapes.small,
                     colors = textFieldColors(
-                        textColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                        focusedTextColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        focusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer
                     )
                 )
 
